@@ -2,7 +2,7 @@
 
 function fileSetup($attr, $val) {
 	$output = json_encode(array('LED' => $val));
-	file_put_contents('control/index.json', $output);
+	file_put_contents('control.json', $output);
 }
 
 if (isset($_GET['led'])) {

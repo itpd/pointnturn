@@ -5,7 +5,7 @@ const char* ssid     = "AndroidAP";
 const char* password = "linx6447";
 
 const char* host     = "itpdiot.ondrejhenek.cz";
-String path          = "/control/index.json";
+String path          = "/control.json";
 const int outputLEDPin = 0;
 
 // declaring a function to get JSON. Don't know why it's needed, but it's needed :X

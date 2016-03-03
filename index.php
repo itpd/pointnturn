@@ -33,7 +33,7 @@
 		TURN OFF
 	</a>
 
-	<a href="control" class="pull-right" target="_blank">
+	<a href="control.json" class="pull-right" target="_blank">
 		Control file
 	</a>
 </div>
