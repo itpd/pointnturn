@@ -57,3 +57,15 @@ String connect() {
 	Serial.print("closing connection. ");
 	return "F";
 }
+
+
+JsonObject& getJson(String response) {
+	Serial.println(response);
+
+	// parsing the JSON
+	int size = response.length() + 1;
+	char json[size];
+	response.toCharArray(json, size);
+	StaticJsonBuffer<200> jsonBuffer;
+	return jsonBuffer.parseObject(response);
+}
