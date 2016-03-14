@@ -41,6 +41,7 @@ String connect() {
 		// we’ll parse the HTML body here
 		if (section=="header") { // headers..
 			Serial.print(".");
+			// Serial.print(line);
 			if (line == "\n") { // skips the empty space at the beginning 
 				section = "json";
 			}

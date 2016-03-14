@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
-const char* ssid     = "AndroidAP";
-const char* password = "linx6447";
+const char* ssid     = "SDU-GUEST";
+const char* password = "";
 
 const char* host     = "itpdiot.ondrejhenek.cz";
 String path          = "/control.json";
