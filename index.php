@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +19,39 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+
+<script type="text/javascript" src="script.js"></script>
+<script>
+var connection = new WebSocket('ws://10.11.2.1:81/', ['arduino']);
+
+connection.onopen = function () {
+	connection.send('Message from Browser to ESP8266 yay its Working!! ' + new Date()); 
+	connection.send('ping');
+	
+/*	setInterval(function() {
+		connection.send('Time: ' + new Date()); 
+	}, 20);
+*/
+connection.send('Time: ' + new Date()); 
+};
+
+connection.onerror = function (error) {
+	console.log('WebSocket Error ', error);
+};
+
+connection.onmessage = function (e) {
+	console.log('Server: ', e.data);
+	connection.send('Time: ' + new Date()); 
+};
+
+function sendRGB() {
+	console.log('RGB: ' + rgb);
+	connection.send(rgb); 
+}
+
+</script>
+
+
 </head>
 
 <body>
@@ -42,17 +74,19 @@
 </pre>
 
 <script type="text/javascript">
-$(document).on('click', '.ajax-link', function(e) {
-	var link = $(this);
-	$.ajax({
-		url: link.attr('href'),
-		success: function(data) {
-			$('.log').prepend(data);
-		}
-	});
-	e.preventDefault();
-	return false;
-})
+// $(document).on('click', '.ajax-link', function(e) {
+// 	var link = $(this);
+// 	$.ajax({
+// 		url: link.attr('href'),
+// 		success: function(data) {
+// 			$('.log').prepend(data);
+// 		}
+// 	});
+// 	e.preventDefault();
+// 	return false;
+// })
+
+
 </script>
 
 </body></html>

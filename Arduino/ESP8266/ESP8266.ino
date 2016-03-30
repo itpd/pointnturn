@@ -1,6 +1,10 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+#include <WebSocketsClient.h>
+
+#include <Hash.h>
+
 const char* ssid     = "SDU-GUEST";
 const char* password = "";
 
@@ -8,8 +12,10 @@ const char* host     = "itpdiot.ondrejhenek.cz";
 String path          = "/control.json";
 const int outputLEDPin = 0;
 
+WebSocketsClient webSocket;
+
 // declaring a function to get JSON. Don't know why it's needed, but it's needed :X
-JsonObject& getJson(String response);
+// JsonObject& getJson(String response);
 
 void setup() {  
 	pinMode(outputLEDPin, OUTPUT);
@@ -17,31 +23,25 @@ void setup() {
 
 	delay(10);
 	wifiConnect();
+
+	webSocket.begin("echo.websocket.org", 80);
+	//webSocket.setAuthorization("user", "Password"); // HTTP Basic Authorization
+	webSocket.onEvent(handleWebSocketEvent);
 }
 
-void loop() {  
+void loop() {
+	// Serial.print(".");
+	// delay(500);
 
-	// Connect to server and get some response
-	String jsonResponse = connect();
-	if (jsonResponse == "F") {
-		Serial.println("Connection failed");
-		return;
-	}
+	webSocket.loop();
+	if (Serial.available()) {
+		String msg = Serial.readString();
+		
+		Serial.println();
+		Serial.print("Sending: ");
+		Serial.println(msg);
 
-	// parse the response from JSON to array "cmd"
-	JsonObject& cmd = getJson(jsonResponse);
-	if (!cmd.success()) {
-		Serial.println("parseObject() failed");
-		return;
-	}
-
-	// whatever logic with JSON, now only LED
-	if (cmd["LED"] == 1) {
-		digitalWrite(outputLEDPin, LOW); // somehow the built in LED is ON when LOW
-		Serial.println("LED ON");
-	} else {
-		digitalWrite(outputLEDPin, HIGH); // somehow the built in LED is ON when LOW
-		Serial.println("LED OFF");
+		webSocket.sendTXT(msg);
 	}
 
 }

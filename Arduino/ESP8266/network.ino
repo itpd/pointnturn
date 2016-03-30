@@ -10,7 +10,7 @@ bool wifiConnect() {
 	}
 
 	Serial.println("WiFi connected");  
-	Serial.println("IP address: " + WiFi.localIP());
+	// Serial.println("IP address: " + WiFi.localIP());
 
 	return true;
 }
