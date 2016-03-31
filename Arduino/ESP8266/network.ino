@@ -17,6 +17,11 @@ bool wifiConnect() {
 
 
 String connect() {
+
+	const char* host     = "itpdiot.ondrejhenek.cz";
+	String path          = "/control.json";
+
+	
 	Serial.print("connecting to ");
 	Serial.println(host);
 	WiFiClient client;

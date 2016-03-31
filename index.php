@@ -18,75 +18,107 @@
 	<meta property="og:locale" content="en_US">
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-
-<script type="text/javascript" src="script.js"></script>
-<script>
-var connection = new WebSocket('ws://10.11.2.1:81/', ['arduino']);
-
-connection.onopen = function () {
-	connection.send('Message from Browser to ESP8266 yay its Working!! ' + new Date()); 
-	connection.send('ping');
-	
-/*	setInterval(function() {
-		connection.send('Time: ' + new Date()); 
-	}, 20);
-*/
-connection.send('Time: ' + new Date()); 
-};
-
-connection.onerror = function (error) {
-	console.log('WebSocket Error ', error);
-};
-
-connection.onmessage = function (e) {
-	console.log('Server: ', e.data);
-	connection.send('Time: ' + new Date()); 
-};
-
-function sendRGB() {
-	console.log('RGB: ' + rgb);
-	connection.send(rgb); 
-}
-
-</script>
-
-
+ -->
 </head>
 
 <body>
 
+
 <div class="container text-center">
-	<a class="btn btn-lg btn-success ajax-link" href="server.php?led=on">
+	<a class="btn btn-lg btn-success ajax-link" onclick="switchLED()" id="ledSwitch">
 		TURN ON
 	</a>
-
-	<a class="btn btn-lg btn-danger ajax-link" href="server.php?led=off">
-		TURN OFF
-	</a>
-
-	<a href="control.json" class="pull-right" target="_blank">
-		Control file
+	<a class="btn btn-lg btn-primary ajax-link" onclick="moveRandom()">
+		MOVE RANDOM
 	</a>
 </div>
 
-<pre class="log">
+
+<!-- User Input -->
+<input id="userinput" type="text" width="300px">
+<a href="javascript:send()">SEND</a>
+
+<pre id="log">
 </pre>
 
+
+<!-- WEBSOCKET SIMPLE SCRIPT -->
 <script type="text/javascript">
-// $(document).on('click', '.ajax-link', function(e) {
-// 	var link = $(this);
-// 	$.ajax({
-// 		url: link.attr('href'),
-// 		success: function(data) {
-// 			$('.log').prepend(data);
-// 		}
-// 	});
-// 	e.preventDefault();
-// 	return false;
-// })
+	var logdiv = document.getElementById('log');
+	var led = false;
+	var ledSwitch = document.getElementById('ledSwitch');
+
+	function logf(str){
+		logdiv.innerHTML += str + "\n";
+	}
 
 
+	WebSocket.prototype.sendMsg = function(msg) {
+		logf('sent: '+ msg);
+		this.send(msg);
+	}
+
+	// create WebSocket
+	var ws = new WebSocket('ws://achex.ca:4010');
+
+	// add event handler for incomming message
+	ws.onmessage = function(evt){
+		var my_received_message = evt.data;
+		logf('received: ' + my_received_message);
+	};
+
+	// add event handler for diconnection 
+	ws.onclose= function(evt){
+		logf('log: Diconnected');
+	};
+
+	// add event handler for error 
+	ws.onerror= function(evt){
+		logf('log: Error');
+	};
+
+	// add event handler for new connection 
+	ws.onopen= function(evt){
+		logf('log: Connected');
+		ws.sendMsg('{"setID":"itpdiotserver","passwd":"none"}');
+	};
+
+	// make a simple send function
+	function send(){
+		var input = document.getElementById('userinput');
+		// send content of input field into websocket
+		ws.sendMsg(input.value);
+		// erase input field
+	}
+	//***************************
+
+	function switchLED() {
+		var newValue;
+		if (led) { // turn off!
+			newValue = 0;
+			ledSwitch.innerHTML = 'LED ON';
+			ledSwitch.classList.remove('btn-danger');
+			ledSwitch.classList.add('btn-success');
+		} else {
+			newValue = 1;
+			ledSwitch.innerHTML = 'LED OFF';
+			ledSwitch.classList.remove('btn-success');
+			ledSwitch.classList.add('btn-danger');
+		}
+		ws.sendMsg('{"to":"itpdiot","led":"' +newValue+ '"}');
+		led = newValue;
+	}
+
+	function moveRandom() {
+		var x = Math.floor(Math.random() * 180);
+		var y = Math.floor(Math.random() * 180);
+		ws.sendMsg('{"to":"itpdiot","servox":"' +x+ '","servoy":"' +y+ '"}');
+	}
 </script>
 
+
 </body></html>
+
