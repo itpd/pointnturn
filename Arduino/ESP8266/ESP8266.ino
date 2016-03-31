@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
-// #include <Servo.h> 
+#include <Servo.h> 
 
 // WiFi settings
 const char* ssid     = "SDU-GUEST";
@@ -10,16 +10,16 @@ const char* password = "";
 
 // Pins
 const int outputLEDPin = 0;
-// const int servoXPin = 12;
-// const int servoYPin = 13;
+const int servoXPin = 12;
+const int servoYPin = 13;
 
 // Others
 WebSocketsClient webSocket;
-// Servo servoX, servoY;
+Servo servoX;
 
 void setup() {  
 	pinMode(outputLEDPin, OUTPUT);
-	// servoX.attach(servoXPin);
+	servoX.attach(servoXPin);
 	// servoY.attach(servoYPin);
 	Serial.begin(115200);
 
