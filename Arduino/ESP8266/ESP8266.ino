@@ -15,12 +15,12 @@ const int servoYPin = 13;
 
 // Others
 WebSocketsClient webSocket;
-Servo servoX;
+Servo servoX, servoY;
 
 void setup() {  
 	pinMode(outputLEDPin, OUTPUT);
 	servoX.attach(servoXPin);
-	// servoY.attach(servoYPin);
+	servoY.attach(servoYPin);
 	Serial.begin(115200);
 
 	delay(10);

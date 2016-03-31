@@ -18,7 +18,7 @@ static void handleCMD(JsonObject& cmd) {
 	}
 
 	if (cmd.containsKey("servoy")) {
-		servoX.write((int) cmd["servoy"]);
+		servoY.write((int) cmd["servoy"]);
 		Serial.print("servoy: ");
 		Serial.println((int) cmd["servoy"]);
 	}
