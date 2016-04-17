@@ -28,45 +28,11 @@
 
 
 <div class="container">
-
 <br>
 
-	<div class="text-center">
-		<a href="clientlog.html" class="pull-right">
-			Client log
-		</a>
-
-		<a class="btn btn-lg btn-success ajax-link" onclick="switchLED()" id="ledSwitch">
-			TURN ON
-		</a>
-		<a class="btn btn-lg btn-primary ajax-link" onclick="moveRandom()">
-			MOVE RANDOM
-		</a>
-
-		<a class="btn btn-lg btn-primary ajax-link" onclick="move(95,95)">
-			95, 95
-		</a>
-
-		<a class="btn btn-lg btn-primary ajax-link" onclick="move(90, 90)">
-			90, 90
-		</a>
-	</div>
-
-<br>
-
-	<div class="row">
-		<div class="col-xs-12 col-md-8 col-md-offset-2">
-			<!-- User Input -->
-			<form onsubmit="send(); return false;">
-				<div class="input-group">
-					<input type="text" class="form-control" id="userinput">
-					<span class="input-group-btn">
-						<button type="submit" class="btn btn-primary">Send</button>
-					</span>
-				</div>
-			</form>
-		</div>
-	</div>
+	<a href="index.html" class="pull-right">
+		The app
+	</a>
 
 <br>
 
@@ -75,8 +41,48 @@
 </div>
 
 
+<script type="text/javascript">
 
-<script type="text/javascript" src="js.js"></script>
+var logdiv = document.getElementById('log');
+function logf(str){
+	logdiv.innerHTML = str + "\n" + logdiv.innerHTML;
+}
+
+// -----------------------------
+// Websocket functionality
+// -----------------------------
+
+WebSocket.prototype.sendMsg = function(msg) {
+	logf('sent: '+ msg);
+	this.send(msg);
+}
+
+// create WebSocket
+var ws = new WebSocket('ws://achex.ca:4010');
+
+// add event handler for incomming message
+ws.onmessage = function(evt){
+	var my_received_message = evt.data;
+	logf('received: ' + my_received_message);
+};
+
+// add event handler for diconnection 
+ws.onclose= function(evt){
+	logf('log: Diconnected');
+};
+
+// add event handler for error 
+ws.onerror= function(evt){
+	logf('log: Error');
+};
+
+// add event handler for new connection 
+ws.onopen= function(evt){
+	logf('log: Connected');
+	ws.sendMsg('{"setID":"itpdiot","passwd":"none"}');
+};
+
+</script>
 </body>
 </html>
 
