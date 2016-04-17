@@ -72,6 +72,6 @@ JsonObject& getJson(String response) {
 	int size = response.length() + 1;
 	char json[size];
 	response.toCharArray(json, size);
-	StaticJsonBuffer<400> jsonBuffer; // Exception (28) if too small!
+	StaticJsonBuffer<1023> jsonBuffer; // Exception (28) if too small!
 	return jsonBuffer.parseObject(response);
 }

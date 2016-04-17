@@ -36,6 +36,5 @@ void handleWebSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
 			// webSocket.sendBIN(payload, lenght);
 			break;
 	}
-	delay(1000);
 
 }
