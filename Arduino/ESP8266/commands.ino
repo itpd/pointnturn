@@ -23,5 +23,21 @@ static void handleCMD(JsonObject& cmd) {
 		Serial.println((int) cmd["servoy"]);
 	}
 
+	if (cmd.containsKey("step")) {
+		if (cmd.containsKey("dir")) {
+
+			Serial.print("step: ");
+			Serial.println((int) cmd["step"]);
+			Serial.print("direction: ");
+
+			if (cmd["dir"] == 'L') {
+				// moving left
+				Serial.println('left');
+			} else {
+				// moving right
+				Serial.println('right');
+			}
+	}
+
 
 }

@@ -1,81 +1,113 @@
-var logdiv = document.getElementById('log');
-var led = false;
-var ledSwitch = document.getElementById('ledSwitch');
-
-function logf(str){
-	logdiv.innerHTML = str + "\n" + logdiv.innerHTML;
-}
-
 // -----------------------------
-// Websocket functionality
+// PNT Parent object
 // -----------------------------
+function PNT(address, senderID, destinationID, log) {
+	this.address = address;
+	this.senderID = senderID;
+	this.destinationID = destinationID;
+	this.led = false;
+	this.logElement = document.getElementById(log);
 
-WebSocket.prototype.sendMsg = function(msg) {
-	logf('sent: '+ msg);
-	this.send(msg);
-}
-
-// create WebSocket
-var ws = new WebSocket('ws://achex.ca:4010');
-
-// add event handler for incomming message
-ws.onmessage = function(evt){
-	var my_received_message = evt.data;
-	logf('received: ' + my_received_message);
-};
-
-// add event handler for diconnection 
-ws.onclose= function(evt){
-	logf('log: Diconnected');
-};
-
-// add event handler for error 
-ws.onerror= function(evt){
-	logf('log: Error');
-};
-
-// add event handler for new connection 
-ws.onopen= function(evt){
-	logf('log: Connected');
-	ws.sendMsg('{"setID":"itpdiotserver","passwd":"none"}');
-};
-
-// -----------------------------
-// TEMPORARY INTERFACE FUNCTIONS
-// -----------------------------
-
-// make a simple send function
-function send(){
-	var input = document.getElementById('userinput');
-	ws.sendMsg(input.value);
-}
-
-// sends a message to switch LED on and off
-function switchLED() {
-	var newValue;
-	if (led) { // turn off!
-		newValue = 0;
-		ledSwitch.innerHTML = 'LED ON';
-		ledSwitch.classList.remove('btn-danger');
-		ledSwitch.classList.add('btn-success');
-	} else {
-		newValue = 1;
-		ledSwitch.innerHTML = 'LED OFF';
-		ledSwitch.classList.remove('btn-success');
-		ledSwitch.classList.add('btn-danger');
+	this.send = function(msg) {
+		this.log('sent: '+ msg);
+		this.ws.send(msg);
 	}
-	ws.sendMsg('{"to":"itpdiot","led":"' +newValue+ '"}');
-	led = newValue;
+
+	this.log = function(msg) {
+		this.logElement.innerHTML = msg + "\n" + this.logElement.innerHTML;
+	}
+
+	// create WebSocket
+	this.ws = new WebSocket(address);
+
+	// add event handler for incomming message
+	this.ws.onmessage = function(evt){
+		var my_received_message = evt.data;
+		this.log('received: ' + my_received_message);
+	};
+
+	// add event handler for diconnection 
+	this.ws.onclose= function(evt){
+		this.log('log: Diconnected');
+	};
+
+	// add event handler for error 
+	this.ws.onerror= function(evt){
+		this.log('log: Error');
+	};
+
+	// add event handler for new connection 
+	this.ws.onopen = (function(evt) {
+		this.log('log: Connected');
+		this.send('{"setID":"' +this.senderID+ '","passwd":"none"}');
+	}).bind(this);
+
+
+	// -------------------------------
+	// DEPRECATED FUNCTIONS
+	// -------------------------------
+	// sends a message to switch LED on and off
+	this.switchLED = function() {
+		var newValue;
+		var ledSwitch = document.getElementById('ledSwitch');
+		if (this.led) { // turn off!
+			newValue = 0;
+			ledSwitch.innerHTML = 'LED ON';
+			ledSwitch.classList.remove('btn-danger');
+			ledSwitch.classList.add('btn-success');
+		} else {
+			newValue = 1;
+			ledSwitch.innerHTML = 'LED OFF';
+			ledSwitch.classList.remove('btn-success');
+			ledSwitch.classList.add('btn-danger');
+		}
+		this.send('{"to":"' +this.destinationID+ '","led":"' +newValue+ '"}');
+		this.led = newValue;
+	}
+
+	// make a simple send function
+	this.sendFromInput = function() {
+		var input = document.getElementById('userinput');
+		this.send(input.value);
+	}
 }
 
+// DEFINING Laser functions
+// -------------------------
+function PNTLaser(address, senderID, destinationID) {
+	PNT.call(this, address, senderID, destinationID);
+}
+// setting up inheritance
+PNTLaser.prototype = Object.create(PNT.prototype);
+PNTLaser.prototype.constructor = PNT;
+
+PNTLaser.prototype.move = function(x, y) {
+	this.send('{"to":"' +this.destinationID+ '","servox":"' +x+ '","servoy":"' +y+ '"}');
+}
 // generates random X and Y degrees 0 - 180 and sends it to ESP
-function moveRandom() {
+PNTLaser.prototype.moveRandom = function() {
 	var x = Math.floor(Math.random() * 180);
 	var y = Math.floor(Math.random() * 180);
-	move(x, y);
+	this.move(x, y);
 }
 
-// sends coordinates for laser
-function move(x, y) {
-	ws.sendMsg('{"to":"itpdiot","servox":"' +x+ '","servoy":"' +y+ '"}');
+
+
+// DEFINING Platform functions
+// -------------------------
+function PNTPlatform(address, senderID, destinationID) {
+	PNT.call(this, address, senderID, destinationID);
 }
+// setting up inheritance
+PNTPlatform.prototype = Object.create(PNT.prototype);
+PNTPlatform.prototype.constructor = PNT;
+
+PNTPlatform.prototype.rotate = function(step, direction) {
+	if (direction != 'L' && direction != 'R') {
+		alert('Set the direction of rotation as "L" for left or "R" for right');
+	}
+	this.send('{"to":"' +this.destinationID+ '","step":"' +step+ '","dir":"' +direction+ '"}');
+}
+
+
+
