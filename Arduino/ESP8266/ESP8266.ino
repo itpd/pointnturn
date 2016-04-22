@@ -4,6 +4,8 @@
 #include <Hash.h>
 #include <Servo.h> 
 
+#define DEVICEID 'PNTL'
+
 // WiFi settings
 const char* ssid     = "SDU-GUEST";
 const char* password = "";

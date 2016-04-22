@@ -42,6 +42,16 @@ function PNT(address, senderID, destinationID, log) {
 		this.send('{"setID":"' +this.senderID+ '","passwd":"none"}');
 	}).bind(this);
 
+	// Get value of last delay in miliseconds
+	this.getDelay = function() {
+		return false;
+	}
+
+	// Returns true if the handshake was successful and delay is not going over given threshold
+	this.connected = function() {
+		return true;
+	}
+
 
 	// -------------------------------
 	// DEPRECATED FUNCTIONS
