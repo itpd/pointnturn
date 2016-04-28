@@ -1,3 +1,8 @@
+<?php if (isset($_GET['id'])) {
+	$id = $_GET['id'];
+} else {
+	exit ('You have to specify ID of device. Access this page with ?id=XXX parameter');
+} ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,7 +84,7 @@ ws.onerror= function(evt){
 // add event handler for new connection 
 ws.onopen= function(evt){
 	logf('log: Connected');
-	ws.sendMsg('{"setID":"PNTL","passwd":"none"}');
+	ws.sendMsg('{"setID":"<?php echo $id ?>","passwd":"none"}');
 };
 
 </script>

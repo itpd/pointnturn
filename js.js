@@ -76,32 +76,74 @@ function PNT(address, senderID, destinationID, log) {
 		this.send('{"to":"' +this.destinationID+ '","led":"' +newValue+ '"}');
 		this.led = newValue;
 	}
-
-	// make a simple send function
-	this.sendFromInput = function() {
-		var input = document.getElementById('userinput');
-		this.send(input.value);
-	}
 }
 
 // DEFINING Laser functions
 // -------------------------
 function PNTLaser(address, senderID, destinationID, log) {
 	PNT.call(this, address, senderID, destinationID, log);
+	this.x = 90;
+	this.y = 90;
+	this.limitXTop = 180;
+	this.limitXBot = 0;
+	this.limitYTop = 180;
+	this.limitYBot = 0;
 }
 // setting up inheritance
 PNTLaser.prototype = Object.create(PNT.prototype);
 PNTLaser.prototype.constructor = PNT;
 
 PNTLaser.prototype.move = function(x, y) {
-	this.send('{"to":"' +this.destinationID+ '","servox":"' +x+ '","servoy":"' +y+ '"}');
+	this.x += x;
+	this.y += y;
+	
+	if (this.x > this.limitXTop) this.x = this.limitXTop;
+	if (this.x < this.limitXBot) this.x = this.limitXBot;
+
+	if (this.y > this.limitYTop) this.y = this.limitYTop;
+	if (this.y < this.limitYBot) this.y = this.limitYBot;
+
+	this.sendMove();
 }
-// generates random X and Y degrees 0 - 180 and sends it to ESP
+// centers the 
+PNTLaser.prototype.center = function() {
+	this.x = Math.floor((this.limitXTop - this.limitXBot) / 2);
+	this.y = Math.floor((this.limitYTop - this.limitYBot) / 2);
+	this.sendMove();
+}
+// generates random X and Y degrees inside limit boundaries and sends it to ESP
 PNTLaser.prototype.moveRandom = function() {
-	var x = Math.floor(Math.random() * 180);
-	var y = Math.floor(Math.random() * 180);
-	this.move(x, y);
+	this.x = Math.floor(Math.random() * this.limitXTop);
+	this.y = Math.floor(Math.random() * this.limitYTop);
+	this.sendMove();
 }
+// move to absolute position
+PNTLaser.prototype.sendMove = function() {
+	this.send('{"to":"' +this.destinationID+ '","servox":"' +this.x+ '","servoy":"' +this.y+ '"}');
+}
+
+// if we are at the limit on X axis, return true
+PNTLaser.prototype.limitX = function() {
+	if (this.x >= this.limitXTop) return '+';
+	else if (this.x <= this.limitXBot) return '-';
+	return false;
+}
+// if we are at the limit on Y axis, return true
+PNTLaser.prototype.limitY = function() {
+	if (this.y >= this.limitYTop) return '+';
+	else if (this.y <= this.limitYBot) return '-';
+	return false;
+}
+// turns the laser on
+PNTLaser.prototype.laserOn = function() {
+	this.send('{"to":"' +this.destinationID+ '","laser":"1"}');
+}
+// turns the laser off
+PNTLaser.prototype.laserOff = function() {
+	this.send('{"to":"' +this.destinationID+ '","laser":"0"}');
+}
+
+
 
 
 

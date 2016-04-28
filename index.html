@@ -28,49 +28,107 @@
 
 
 <div class="container">
-
-<br>
-
-	<div class="text-center">
-		<a href="clientlog.html" class="pull-right">
-			Client log
-		</a>
-
-		<a class="btn btn-lg btn-success ajax-link" onclick="laser.switchLED()" id="ledSwitch">
-			TURN ON
-		</a>
-		<a class="btn btn-lg btn-primary ajax-link" onclick="laser.moveRandom()">
-			MOVE RANDOM
-		</a>
-
-		<a class="btn btn-lg btn-primary ajax-link" onclick="laser.move(95,95)">
-			95, 95
-		</a>
-
-		<a class="btn btn-lg btn-primary ajax-link" onclick="laser.move(90, 90)">
-			90, 90
-		</a>
-	</div>
-
-<br>
-
 	<div class="row">
-		<div class="col-xs-12 col-md-8 col-md-offset-2">
-			<!-- User Input -->
-			<form onsubmit="send(); return false;">
-				<div class="input-group">
-					<input type="text" class="form-control" id="userinput">
-					<span class="input-group-btn">
-						<button type="submit" class="btn btn-primary">Send</button>
-					</span>
-				</div>
-			</form>
+
+		<div class="col-xs-12 col-md-6 text-center">
+
+			<h1>Laser</h1>
+
+			<a href="devicelog.php?id=PNTL" class="pull-right">
+				Laser log
+			</a>
+
+			<a class="btn btn-lg btn-success" onclick="laser.laserOn()">
+				Laser ON
+			</a>
+			<a class="btn btn-lg btn-danger" onclick="laser.laserOff()">
+				Laser OFF
+			</a>
+			<a class="btn btn-lg btn-success" onclick="laser.switchLED()" id="ledSwitch">
+				LED ON
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.moveRandom()">
+				RANDOM
+			</a>
+		
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, 1)">
+				-1 +1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(0, 1)">
+				+0 +1 
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, 1)">
+				+1 +1
+			</a>
+
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, 0)">
+				-1 +0 
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.center()">
+				CNTR
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, 0)">
+				+1 +0
+			</a>
+
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, -1)">
+				-1 -1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(0, -1)">
+				+0 -1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, -1)">
+				+1 -1
+			</a>
+
+		</div>
+
+
+		<div class="col-xs-12 col-md-6 text-center">
+
+			<h1>Platform</h1>
+
+			<a href="devicelog.php?id=PNTP" class="pull-right">
+				Platform log
+			</a>
+
+			<a class="btn btn-lg btn-success" onclick="platform.switchLED()" id="ledSwitch">
+				LED ON
+			</a>
+		
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2, 'L')">
+				2 LEFT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1, 'L')">
+				1 LEFT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1, 'R')">
+				1 RIGHT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2, 'R')">
+				2 RIGHT
+			</a>
+
 		</div>
 	</div>
 
-<br>
+	<div class="row">
+		<div class="col-xs-12 col-md-6">
+			<pre id="laserlog"></pre>
+		</div>
+		<div class="col-xs-12 col-md-6">
+			<pre id="platformlog"></pre>
+		</div>
 
-	<pre id="log"></pre>
+	</div>
 
 </div>
 
@@ -78,8 +136,8 @@
 
 <script type="text/javascript" src="js.js"></script>
 <script type="text/javascript">
-	var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL', 'log');
-	var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP', 'log');
+	var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL', 'laserlog');
+	var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP', 'platformlog');
 </script>
 </body>
 </html>
