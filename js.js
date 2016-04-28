@@ -14,27 +14,29 @@ function PNT(address, senderID, destinationID, log) {
 	}
 
 	this.log = function(msg) {
-		this.logElement.innerHTML = msg + "\n" + this.logElement.innerHTML;
+		if (this.logElement != null) {
+			this.logElement.innerHTML = msg + "\n" + this.logElement.innerHTML;
+		}
 	}
 
 	// create WebSocket
 	this.ws = new WebSocket(address);
 
 	// add event handler for incomming message
-	this.ws.onmessage = function(evt){
+	this.ws.onmessage = (function(evt){
 		var my_received_message = evt.data;
 		this.log('received: ' + my_received_message);
-	};
+	}).bind(this);
 
 	// add event handler for diconnection 
-	this.ws.onclose= function(evt){
+	this.ws.onclose = (function(evt){
 		this.log('log: Diconnected');
-	};
+	}).bind(this);
 
 	// add event handler for error 
-	this.ws.onerror= function(evt){
+	this.ws.onerror = (function(evt){
 		this.log('log: Error');
-	};
+	}).bind(this);
 
 	// add event handler for new connection 
 	this.ws.onopen = (function(evt) {
@@ -84,8 +86,8 @@ function PNT(address, senderID, destinationID, log) {
 
 // DEFINING Laser functions
 // -------------------------
-function PNTLaser(address, senderID, destinationID) {
-	PNT.call(this, address, senderID, destinationID);
+function PNTLaser(address, senderID, destinationID, log) {
+	PNT.call(this, address, senderID, destinationID, log);
 }
 // setting up inheritance
 PNTLaser.prototype = Object.create(PNT.prototype);
@@ -105,8 +107,8 @@ PNTLaser.prototype.moveRandom = function() {
 
 // DEFINING Platform functions
 // -------------------------
-function PNTPlatform(address, senderID, destinationID) {
-	PNT.call(this, address, senderID, destinationID);
+function PNTPlatform(address, senderID, destinationID, log) {
+	PNT.call(this, address, senderID, destinationID, log);
 }
 // setting up inheritance
 PNTPlatform.prototype = Object.create(PNT.prototype);

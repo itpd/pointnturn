@@ -37,6 +37,7 @@ static void handleCMD(JsonObject& cmd) {
 				// moving right
 				Serial.println('right');
 			}
+		}
 	}
 
 
