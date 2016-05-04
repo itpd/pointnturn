@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta >
+	<title>Forget ripple</title>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+
+		svg {
+  			display: block;
+  			background-color: rgba(50,50,50,0.5);
+  			width: 100%;
+			height: 100%;
+		}
+
+		/* The 70% is important, as it divides the screen vertically */
+		#laser_svg_container {
+			width: 100%;
+			height: 70%;
+  		}
+
+		/* The 30% is important, as it divides the screen vertically - counterpart to the above */
+		#panning_svg_container {
+			width: 100%;
+			height: 30%;
+			background-color: rgba(120,120,120,0.2);
+  		}
+
+		#bottom_layer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			min-height: 100%; 
+			border: 0px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			background: rgb(230,230,230);
+			z-index: 0;
+		}
+
+		#status_box {
+			position: relative;
+			top: 62%;
+			display: flex;
+  			align-items: center;
+			justify-content: center;
+		}
+
+		#log {
+			font-size: 32pt;
+		}
+
+		#upper_layer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			min-height: 100%; 
+			border: 1px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;			
+			z-index: 1;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="bottom_layer">
+		<div id="status_box">
+			<div id="log">- point'n'turn at your service -</div>
+		</div>
+	</div>
+
+	<div id="upper_layer">
+		<div id="laser_svg_container">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+				<line id="laser_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
+				<circle id="laser_anchor_circle" cx="50%" cy="50%" r="50" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="laser_target_circle" cx="50%" cy="50%" r="100" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+			</svg>			
+		</div>
+
+		<div id="panning_svg_container">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+				<line id="turner_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
+				<circle id="turner_anchor_circle" cx="50%" cy="50%" r="50" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="turner_target_circle" cx="50%" cy="50%" r="100" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+			</svg>			
+		</div>
+	</div>
+
+	<!-- Here could be a modernizr code to check if we are on too old thingie.. -->
+
+	<script src="js/jquery-2.2.3.min.js"></script>
+	<script src="js/velocity.min.js"></script>
+
+	<script type="text/javascript">
+		var isTouch = false;
+		var isLaser = false;
+
+	    var currentMousePos = { x: -1, y: -1 };
+		var dragstart_x = -1;
+		var dragstart_y = -1;
+
+		var x_velocity = 0;
+		var y_velocity = 0;
+		var x_velo_temp = 0; // used in updateMovementsToDevices()
+		var y_velo_temp = 0; // used in updateMovementsToDevices()
+
+		var is_dragging = false;
+		
+		var window_height = 0;
+		var laser_height = 0;
+
+		var intervalID;
+		var webSocketIntervalID;
+
+		function startDrag(x,y) {
+			dragstart_x = x;
+			dragstart_y = y;
+			currentMousePos = { x: x, y: y };
+			is_dragging = true;
+
+			// This prepares for checking if click/touch is in upper or lower area of the window 
+			window_height = $(window).height();
+			laser_height = window_height*0.7;
+			isLaser =  y < laser_height ? true : false; 
+	
+			// Manage the upper part of the screen that controls laser
+			if ( isLaser ) {
+				//$("#log").html("Dragging started X:" + x + " Y:" + y + " Laser");
+				$("#laser_target_circle").velocity({ cx: x, cy: y }, { duration: 0 });
+				$("#laser_dragline").velocity({ x1: x, y1: y, x2: x, y2: y}, { duration: 0 });
+				$("#laser_anchor_circle").velocity({ cx: x, cy: y }, { duration: 0 });
+				$("#laser_target_circle").velocity({ opacity: 1 },{ duration: 10 });
+				$("#laser_dragline").velocity({ opacity: 1 },{ duration: 10 });
+				$("#laser_anchor_circle").velocity({ opacity: 1 },{ duration: 0 });
+
+			// Manage the lower part of the screen that controls turning
+			} else {
+				//$("#log").html("Dragging started X:" + x + " Y:" + y + " Turner");
+				$("#turner_target_circle").velocity({ cx: x, cy: y-laser_height }, { duration: 0 });
+				$("#turner_dragline").velocity({ x1: x, y1: y-laser_height, x2: x, y2: y-laser_height}, { duration: 0 });
+				$("#turner_anchor_circle").velocity({ cx: x, cy: y-laser_height }, { duration: 0 });
+				$("#turner_target_circle").velocity({ opacity: 1 },{ duration: 10 });
+				$("#turner_dragline").velocity({ opacity: 1 },{ duration: 10 });
+				$("#turner_anchor_circle").velocity({ opacity: 1 },{ duration: 0 });
+			}
+
+		    intervalID = setInterval(updateDragPosition, 30);
+		    webSocketIntervalID = setInterval(updateMovementsToDevices, 200);
+		}
+
+
+		// Called on interval, which is set in setInterval() after dragging has started
+		function updateDragPosition() {
+			if (isLaser) {
+				$("#laser_target_circle").velocity({ cx: currentMousePos.x, cy: currentMousePos.y }, { duration: 0 });
+				$("#laser_dragline").velocity({ x1: currentMousePos.x, y1: currentMousePos.y }, { duration: 0 });
+
+			} else {
+				$("#turner_target_circle").velocity({ cx: currentMousePos.x, cy: currentMousePos.y-laser_height}, { duration: 0 });
+				$("#turner_dragline").velocity({ x1: currentMousePos.x, y1: currentMousePos.y-laser_height }, { duration: 0 });
+			}
+		}
+
+		// Called once user releases dragging
+		function stopDrag() {
+			is_dragging = false;
+			if (isLaser) {
+				$("#laser_target_circle").velocity({ cx: dragstart_x, cy: dragstart_y }, { duration: "fast" });
+				$("#laser_dragline").velocity({ x1: dragstart_x, y1: dragstart_y, x2: dragstart_x, y2: dragstart_y }, { duration: "fast" });
+				$("#laser_target_circle").velocity({ opacity: 0 }, { duration: 100 });
+				$("#laser_dragline").velocity({ opacity: 0 }, { duration: 100 });
+				$("#laser_anchor_circle").velocity({ opacity: 0}, { duration: 100 });
+			} else {
+				$("#turner_target_circle").velocity({ cx: dragstart_x, cy: dragstart_y-laser_height }, { duration: "fast" });
+				$("#turner_dragline").velocity({ x1: dragstart_x, y1: dragstart_y-laser_height, x2: dragstart_x, y2: dragstart_y-laser_height }, { duration: "fast" });
+				$("#turner_target_circle").velocity({ opacity: 0 }, { duration: 100 });
+				$("#turner_dragline").velocity({ opacity: 0 }, { duration: 100 });
+				$("#turner_anchor_circle").velocity({ opacity: 0}, { duration: 100 });
+			}
+			$("#log").html("- standing by -");
+			clearInterval(intervalID); // Stops the repeated calling to update the GUI
+			clearInterval(webSocketIntervalID); // Stops the repeated calling to update devices across WebSocket
+		}
+
+		// -------------------------------
+		//   NON-TOUCH DEVICE FUNCTIONS
+		// -------------------------------		
+		$(document).on("mousemove", function( e ) {
+			currentMousePos.x = e.pageX;
+			currentMousePos.y = e.pageY;
+		});
+
+		$(document).mousedown(function(e) {
+			startDrag(e.pageX, e.pageY);
+		});
+
+		$(document).mouseup(function() {
+			stopDrag();
+		});
+
+		// -------------------------------
+		//     TOUCH DEVICE FUNCTIONS
+		// -------------------------------
+		$(document).on('touchstart',function(e) {
+			isTouch = true;
+			e.preventDefault();
+			startDrag(e.originalEvent.touches[0].pageX, e.originalEvent.touches[0].pageY);
+		});
+
+		$(document).on('touchmove',function(e) {
+			e.preventDefault();
+			currentMousePos.x = e.originalEvent.touches[0].pageX;
+			currentMousePos.y = e.originalEvent.touches[0].pageY;
+		});
+
+		$(document).on('touchend',function() {
+			stopDrag();
+		});
+
+		// -------------------------------
+		// 		PREPARE FOR WEBSOCKET
+		// -------------------------------
+		function updateMovementsToDevices() {
+			$("#log").html("");
+			x_velo_temp = dragstart_x - currentMousePos.x;
+
+			if (isLaser) {
+				y_velo_temp = dragstart_y - currentMousePos.y;
+
+				if (x_velo_temp > 200) { // turn laser left with velo 3
+					$("#log").html("jeeeee ");
+
+				} else if (x_velo_temp < -200) { // turn laser right with velo 3
+					$("#log").html("jooooo ");
+					
+				} else if (x_velo_temp > 100) {  // turn laser left with velo 2
+					$("#log").html("jeee ");
+				} else if (x_velo_temp < -100) {  // turn laser left with velo 2
+					$("#log").html("jooo ");
+
+				} else if (x_velo_temp > 30) { // turn laser left with velo 1
+					$("#log").html("je ");
+				} else if (x_velo_temp < -30) { // turn laser left with velo 1
+					$("#log").html("jo ");
+
+				} 
+
+				var htmlString = $("#log").html();
+
+				if (y_velo_temp > 200) { // turn laser up with velo 3
+					$("#log").html(htmlString+ " hiiiii ");
+				} else if (y_velo_temp < -200) { // turn laser down with velo 3
+					$("#log").html(htmlString+ " heeeee ");
+					
+				} else if (y_velo_temp > 100) {  // turn laser up with velo 2
+					$("#log").html(htmlString+ " hiii");
+				} else if (y_velo_temp < -100) {  // turn laser down with velo 2
+					$("#log").html(htmlString+ " heee ");
+
+				} else if (y_velo_temp > 30) { // turn laser up with velo 1
+					$("#log").html(htmlString+ " hi ");
+				} else if (y_velo_temp < -30) { // turn laser down with velo 1
+					$("#log").html(htmlString+ " he ");
+
+				} 
+
+			} else { // if turn table
+				if (x_velo_temp > 200) { // turn view left with velo 3
+					$("#log").html("jeeeee ");
+
+				} else if (x_velo_temp < -200) { // turn view right with velo 3
+					$("#log").html("jooooo ");
+					
+				} else if (x_velo_temp > 100) {  // turn view left with velo 2
+					$("#log").html("jeee ");
+				} else if (x_velo_temp < -100) {  // turn view left with velo 2
+					$("#log").html("jooo ");
+
+				} else if (x_velo_temp > 30) { // turn view left with velo 1
+					$("#log").html("je ");
+				} else if (x_velo_temp < -30) { // turn view left with velo 1
+					$("#log").html("jo ");
+
+				} 
+
+			}
+		}
+
+
+	</script>
+
+
+</body>
+</html>
