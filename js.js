@@ -156,11 +156,8 @@ function PNTPlatform(address, senderID, destinationID, log) {
 PNTPlatform.prototype = Object.create(PNT.prototype);
 PNTPlatform.prototype.constructor = PNT;
 
-PNTPlatform.prototype.rotate = function(step, direction) {
-	if (direction != 'L' && direction != 'R') {
-		alert('Set the direction of rotation as "L" for left or "R" for right');
-	}
-	this.send('{"to":"' +this.destinationID+ '","step":"' +step+ '","dir":"' +direction+ '"}');
+PNTPlatform.prototype.rotate = function(step) {
+	this.send('{"to":"' +this.destinationID+ '","step":"' +step+ '"}');
 }
 
 

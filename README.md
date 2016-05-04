@@ -58,9 +58,9 @@ To initialize the Laser create a new PNTLaser object with 3 arguments:
 	var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP');
 
 
-	// moves the platform by Step of size (1-5) which takes 300ms
-	// and in Direction 'L' for left and 'R' for right
-	platform.rotate(Step, Direction);
+	// moves the platform by Step of size (1-3) which takes 300ms
+	// Positive goes right, negative goes left
+	platform.rotate(Step);
 
 	// both Laser and Platform have switchLED() method which switches embedded LED on and off
 	platform.switchLED();
@@ -78,7 +78,6 @@ To initialize the Laser create a new PNTLaser object with 3 arguments:
 
 1. Make the DEVICEID in the code as a variable
 2. Interface for connecting to different wifis than 'SDU-GUEST' for ESP
-3. Interface for the contoller
 
 ## Board setup with Arduino
 https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide

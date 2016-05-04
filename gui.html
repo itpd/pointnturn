@@ -105,8 +105,13 @@
 
 	<script src="js/jquery-2.2.3.min.js"></script>
 	<script src="js/velocity.min.js"></script>
+	<script src="js.js"></script>
 
 	<script type="text/javascript">
+		var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL');
+		var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP');
+
+
 		var isTouch = false;
 		var isLaser = false;
 
@@ -238,67 +243,38 @@
 		function updateMovementsToDevices() {
 			$("#log").html("");
 			x_velo_temp = dragstart_x - currentMousePos.x;
+			var x_pos = translateMovement(x_velo_temp);
 
 			if (isLaser) {
 				y_velo_temp = dragstart_y - currentMousePos.y;
+				var y_pos = translateMovement(y_velo_temp);
 
-				if (x_velo_temp > 200) { // turn laser left with velo 3
-					$("#log").html("jeeeee ");
-
-				} else if (x_velo_temp < -200) { // turn laser right with velo 3
-					$("#log").html("jooooo ");
-					
-				} else if (x_velo_temp > 100) {  // turn laser left with velo 2
-					$("#log").html("jeee ");
-				} else if (x_velo_temp < -100) {  // turn laser left with velo 2
-					$("#log").html("jooo ");
-
-				} else if (x_velo_temp > 30) { // turn laser left with velo 1
-					$("#log").html("je ");
-				} else if (x_velo_temp < -30) { // turn laser left with velo 1
-					$("#log").html("jo ");
-
-				} 
-
-				var htmlString = $("#log").html();
-
-				if (y_velo_temp > 200) { // turn laser up with velo 3
-					$("#log").html(htmlString+ " hiiiii ");
-				} else if (y_velo_temp < -200) { // turn laser down with velo 3
-					$("#log").html(htmlString+ " heeeee ");
-					
-				} else if (y_velo_temp > 100) {  // turn laser up with velo 2
-					$("#log").html(htmlString+ " hiii");
-				} else if (y_velo_temp < -100) {  // turn laser down with velo 2
-					$("#log").html(htmlString+ " heee ");
-
-				} else if (y_velo_temp > 30) { // turn laser up with velo 1
-					$("#log").html(htmlString+ " hi ");
-				} else if (y_velo_temp < -30) { // turn laser down with velo 1
-					$("#log").html(htmlString+ " he ");
-
-				} 
-
-			} else { // if turn table
-				if (x_velo_temp > 200) { // turn view left with velo 3
-					$("#log").html("jeeeee ");
-
-				} else if (x_velo_temp < -200) { // turn view right with velo 3
-					$("#log").html("jooooo ");
-					
-				} else if (x_velo_temp > 100) {  // turn view left with velo 2
-					$("#log").html("jeee ");
-				} else if (x_velo_temp < -100) {  // turn view left with velo 2
-					$("#log").html("jooo ");
-
-				} else if (x_velo_temp > 30) { // turn view left with velo 1
-					$("#log").html("je ");
-				} else if (x_velo_temp < -30) { // turn view left with velo 1
-					$("#log").html("jo ");
-
-				} 
-
+				laser.move(x_pos, y_pos);
+				$("#log").html( x_pos +' , '+ y_pos );
+			} else {
+				platform.rotate( x_pos );
+				$("#log").html( x_pos );
 			}
+		}
+
+		function translateMovement(velo) {
+			if (velo > 200) { // turn view left with velo 3
+				return -3;
+			} else if (velo < -200) { // turn view right with velo 3
+				return 3;
+
+			} else if (velo > 100) {  // turn view left with velo 2
+				return -2;
+			} else if (velo < -100) {  // turn view left with velo 2
+				return 2;
+
+			} else if (velo > 30) { // turn view left with velo 1
+				return -1;
+			} else if (velo < -30) { // turn view left with velo 1
+				return 1;
+			}
+
+			return 0;
 		}
 
 
