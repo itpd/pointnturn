@@ -1,6 +1,6 @@
 # Point'N'Turn
 
-## Javascript Interfce
+## Javascript Interface
 
 To initialize the Laser create a new PNTLaser object with 3 arguments:
 
