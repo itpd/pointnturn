@@ -109,16 +109,16 @@
 		
 			<br>
 
-			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2, 'L')">
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(-2)">
 				2 LEFT
 			</a>
-			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1, 'L')">
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(-1)">
 				1 LEFT
 			</a>
-			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1, 'R')">
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1)">
 				1 RIGHT
 			</a>
-			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2, 'R')">
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2)">
 				2 RIGHT
 			</a>
 
@@ -139,7 +139,7 @@
 
 
 
-<script type="text/javascript" src="js.js"></script>
+<script type="text/javascript" src="js/pnt.js"></script>
 <script type="text/javascript">
 	var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL', 'laserlog');
 	var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP', 'platformlog');

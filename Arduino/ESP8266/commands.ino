@@ -24,20 +24,13 @@ static void handleCMD(JsonObject& cmd) {
 	}
 
 	if (cmd.containsKey("step")) {
-		if (cmd.containsKey("dir")) {
+		int move = (int) cmd["step"];
+		move = move * platformMoveSpeed;
 
-			Serial.print("step: ");
-			Serial.println((int) cmd["step"]);
-			Serial.print("direction: ");
+		Serial.print("Platform speed: ");
+		Serial.println(move);
 
-			if (cmd["dir"] == 'L') {
-				// moving left
-				Serial.println('left');
-			} else {
-				// moving right
-				Serial.println('right');
-			}
-		}
+		stepper.move(move);
 	}
 
 

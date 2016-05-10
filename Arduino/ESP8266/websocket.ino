@@ -11,7 +11,10 @@ void handleWebSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
 				USE_SERIAL.printf("[WSc] Connected to url: %s\n",  payload);
 				
 				// send message to server when Connected
-				webSocket.sendTXT("{\"setID\":\"PNTL\",\"passwd\":\"none\"}");
+				String message = "{\"setID\":\"";
+				message.concat(DEVICEID);
+				message.concat("\",\"passwd\":\"none\"}");
+				webSocket.sendTXT(message);
 			}
 			break;
 		case WStype_TEXT:

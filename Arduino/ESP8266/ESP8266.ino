@@ -2,9 +2,10 @@
 #include <ArduinoJson.h>
 #include <WebSocketsClient.h>
 #include <Hash.h>
-#include <Servo.h> 
+#include <Servo.h>
+#include <AccelStepper.h>
 
-#define DEVICEID 'PNTL'
+#define DEVICEID "PNTP"
 
 // WiFi settings
 const char* ssid     = "SDU-GUEST";
@@ -19,6 +20,10 @@ const int servoYPin = 13;
 WebSocketsClient webSocket;
 Servo servoX, servoY;
 
+// Motor stuff
+AccelStepper stepper(AccelStepper::FULL4WIRE, 14, 13, 12, 15);
+int platformMoveSpeed = 100;
+
 void setup() {  
 	pinMode(outputLEDPin, OUTPUT);
 	servoX.attach(servoXPin);
@@ -31,6 +36,9 @@ void setup() {
 	webSocket.begin("achex.ca", 4010); // port 80?
 	//webSocket.setAuthorization("user", "Password"); // HTTP Basic Authorization
 	webSocket.onEvent(handleWebSocketEvent);
+
+	stepper.setMaxSpeed(300);
+	stepper.setAcceleration(100);
 }
 
 void loop() {
@@ -45,5 +53,8 @@ void loop() {
 
 		webSocket.sendTXT(msg);
 	}
+
+	// if the motor has somewhere to go, this makes one step
+	stepper.run();
 
 }
