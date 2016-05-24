@@ -13,7 +13,9 @@ void handleWebSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
 				// send message to server when Connected
 				String message = "{\"setID\":\"";
 				message.concat(DEVICEID);
-				message.concat("\",\"passwd\":\"none\"}");
+				message.concat("\",\"passwd\":\"");
+				message.concat(DEVICEPASSWORD);
+				message.concat("\"}");
 				webSocket.sendTXT(message);
 			}
 			break;

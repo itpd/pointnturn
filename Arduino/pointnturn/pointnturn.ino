@@ -5,11 +5,19 @@
 #include <Servo.h>
 #include <AccelStepper.h>
 
-#define DEVICEID "PNTP"
+// ---------------------------------------------------
+//                  Your Settings
+// ---------------------------------------------------
+// Device ID settings
+#define DEVICEID "PNTP" // Device ID
+#define DEVICEPASSWORD "none" // Device password
 
 // WiFi settings
-const char* ssid     = "SDU-GUEST";
-const char* password = "";
+const char* ssid     = "SDU-GUEST"; // Wifi name (SSID)
+const char* password = ""; // Wifi password (blank for no password)
+// ---------------------------------------------------
+// ---------------------------------------------------
+
 
 // Pins
 const int outputLEDPin = 0;
@@ -38,7 +46,7 @@ void setup() {
 	webSocket.onEvent(handleWebSocketEvent);
 
 	stepper.setMaxSpeed(300);
-	stepper.setAcceleration(100);
+	stepper.setAcceleration(300);
 }
 
 void loop() {
