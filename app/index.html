@@ -119,6 +119,12 @@
 		}
 
 	</style>
+	
+
+	<!-- Here could be a modernizr code to check if we are on too old thingie.. -->
+	<script src="js/jquery-2.2.3.min.js"></script>
+	<script src="js/velocity.min.js"></script>
+	<script src="js/pointnturn.js"></script>
 
 </head>
 <body>
@@ -126,7 +132,7 @@
 	<div id="overlay">
 
 		<form id="setupForm">
-			<input type="text" name="remoteID" id="remoteID" placeholder="Device ID" required>
+			<input type="text" name="remoteID" id="remoteID" placeholder="Input device ID" required>
 			<!-- <input type="text" name="thisID" id="thisID" placeholder="Password"> -->
 			<input type="submit" value="Submit">
 		</form>
@@ -143,32 +149,26 @@
 		<div id="laser_svg_container">
 			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
 				<line id="laser_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
-				<circle id="laser_anchor_circle" cx="50%" cy="50%" r="50" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
-				<circle id="laser_target_circle" cx="50%" cy="50%" r="100" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="laser_anchor_circle" cx="50%" cy="50%" r="5%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="laser_target_circle" cx="50%" cy="50%" r="10%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
 			</svg>
 		</div>
 
 		<div id="panning_svg_container">
 			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
 				<line id="turner_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
-				<circle id="turner_anchor_circle" cx="50%" cy="50%" r="50" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
-				<circle id="turner_target_circle" cx="50%" cy="50%" r="100" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="turner_anchor_circle" cx="50%" cy="50%" r="5%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
+				<circle id="turner_target_circle" cx="50%" cy="50%" r="10%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
 			</svg>			
 		</div>
 	</div>
-
-	<!-- Here could be a modernizr code to check if we are on too old thingie.. -->
-
-	<script src="js/jquery-2.2.3.min.js"></script>
-	<script src="js/velocity.min.js"></script>
-	<script src="js/pointnturn.js"></script>
 
 	<script type="text/javascript">
 		var laser, platform;
 
 		$('#setupForm').submit(function() {
 			// var thisID = $('#thisID').val();
-			var thisID = 'PNTController' + Math.floor(Date.now() / 1000);
+			var thisID = 'PNTController' + Math.random().toString(36).substr(2);
 			var remoteID = $('#remoteID').val();
 			setDeviceIDs(thisID, remoteID);
 			$('#overlay').hide();

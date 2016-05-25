@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+	<title>Point'N'Turn App</title>
+	<meta property="og:title" content="Point'N'Turn - App">
+
+	<meta name="author" content="Ondrej Henek, Peter Heinzl, Salu Ylirisku">
+	<meta name="description" content="Point'N'Turn is a set of devices which lets you take back control of you presence in meetings. The idea was developed as a part of Master study program IT Product Design @SDU.dk">
+	<meta property="og:description" content="Point'N'Turn is a set of devices which lets you take back control of you presence in meetings. The idea was developed as a part of Master study program IT Product Design @SDU.dk">
+	<meta property="og:type" content="website">
+	<meta property="og:locale" content="en_US">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="js/jquery-2.2.3.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="container">
+<br>
+
+	<a href="index.html" class="pull-right">
+		The app
+	</a>
+
+	<form id="deviceForm">
+		<input type="text" id="deviceid" placeholder="input device ID">
+		<button type="submit">Submit</button>
+	</form>
+
+<br>
+
+	<pre id="log"></pre>
+
+</div>
+
+
+<script type="text/javascript">
+
+var logdiv = document.getElementById('log');
+function logf(str){
+	logdiv.innerHTML = str + "\n" + logdiv.innerHTML;
+}
+
+// -----------------------------
+// Websocket functionality
+// -----------------------------
+
+WebSocket.prototype.sendMsg = function(msg) {
+	logf('sent: '+ msg);
+	this.send(msg);
+}
+
+function init(deviceID) {
+	// create WebSocket
+	var ws = new WebSocket('ws://achex.ca:4010');
+
+	// add event handler for incomming message
+	ws.onmessage = function(evt){
+		var my_received_message = evt.data;
+		logf('received: ' + my_received_message);
+	};
+
+	// add event handler for diconnection 
+	ws.onclose= function(evt){
+		logf('log: Diconnected');
+	};
+
+	// add event handler for error 
+	ws.onerror= function(evt){
+		logf('log: Error');
+	};
+
+	// add event handler for new connection 
+	ws.onopen= function(evt){
+		logf('log: Connected');
+		ws.sendMsg('{"setID":"' + deviceID + '","passwd":"none"}');
+	};
+}
+
+$('#deviceForm').submit(function() {
+	var deviceID = $('#deviceid').val();
+	init(deviceID);
+	return false;
+});
+
+
+</script>
+</body>
+</html>
+
