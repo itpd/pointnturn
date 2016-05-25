@@ -71,10 +71,44 @@
 			z-index: 1;
 		}
 
+		#overlay {
+			background-color: rgba(255, 255, 255, .8);
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+		}
+
+		#setupForm {
+			left: 50%;
+			margin: 0 0 -100px -100px;
+			position: absolute;
+			top: 50%;
+			width: 200px;
+		}
+
+		#setupForm input {
+			display: block;
+			padding: 5px 15px;
+			width: 100%;
+		}
+
 	</style>
 
 </head>
 <body>
+
+	<div id="overlay">
+
+		<form id="setupForm">
+			<input type="text" name="remoteID" id="remoteID" placeholder="Device ID">
+			<input type="text" name="thisID" id="thisID" placeholder="Password">
+			<input type="submit" value="Submit">
+		</form>
+
+	</div>
 
 	<div id="bottom_layer">
 		<div id="status_box">
@@ -107,8 +141,20 @@
 	<script src="js/pointnturn.js"></script>
 
 	<script type="text/javascript">
-		var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL');
-		var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP');
+		var laser, platform;
+
+		$('#setupForm').submit(function() {
+			var thisID = $('#thisID').val();
+			var remoteID = $('#remoteID').val();
+			setDeviceIDs(thisID, remoteID);
+			$('#overlay').hide();
+			return false;
+		});
+
+		function setDeviceIDs(thisID, remoteID) {
+			laser = new PNTLaser('ws://achex.ca:4010', thisID, remoteID);
+			platform = new PNTPlatform('ws://achex.ca:4010', thisID, remoteID);
+		}
 
 
 		var isTouch = false;
@@ -275,7 +321,6 @@
 
 			return 0;
 		}
-
 
 	</script>
 
