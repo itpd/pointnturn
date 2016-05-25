@@ -31,6 +31,7 @@
   		}
 
 		#bottom_layer {
+			display: none;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -152,6 +153,9 @@
 		});
 
 		function setDeviceIDs(thisID, remoteID) {
+			if (thisID.length == 0) {
+				thisID = 'PNTDefaultController';
+			}
 			laser = new PNTLaser('ws://achex.ca:4010', thisID, remoteID);
 			platform = new PNTPlatform('ws://achex.ca:4010', thisID, remoteID);
 		}
