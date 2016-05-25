@@ -82,12 +82,12 @@ function PNT(address, senderID, destinationID, log) {
 // -------------------------
 function PNTLaser(address, senderID, destinationID, log) {
 	PNT.call(this, address, senderID, destinationID, log);
-	this.x = 90;
-	this.y = 90;
-	this.limitXTop = 180;
-	this.limitXBot = 0;
-	this.limitYTop = 180;
-	this.limitYBot = 0;
+	this.x = 1500;
+	this.y = 1500;
+	this.limitXTop = 1750;
+	this.limitXBot = 1250;
+	this.limitYTop = 1750;
+	this.limitYBot = 1250;
 }
 // setting up inheritance
 PNTLaser.prototype = Object.create(PNT.prototype);

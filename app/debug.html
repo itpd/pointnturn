@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+	<title>ITPD IOT</title>
+	<meta property="og:title" content="ITPD IOT">
+
+	<meta name="author" content="Ondřej Henek">
+	<meta name="description" content="IT Product Design @SDU.dk - Internet of Things project">
+	<meta property="og:description" content="IT Product Design @SDU.dk - Internet of Things project">
+
+	<meta property="og:type" content="website">
+	<meta property="og:locale" content="en_US">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- 
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+ -->
+</head>
+
+<body>
+
+
+<div class="container">
+	<h2 class="text-center">
+		<a href=".">
+			WORKING GUI HERE
+		</a>
+	</h2>
+	<div class="row">
+
+		<div class="col-xs-12 col-md-6 text-center">
+
+			<h1>Laser</h1>
+
+			<a href="devicelog.php?id=PNTL" class="pull-right">
+				Laser log
+			</a>
+
+			<a class="btn btn-lg btn-success" onclick="laser.laserOn()">
+				Laser ON
+			</a>
+			<a class="btn btn-lg btn-danger" onclick="laser.laserOff()">
+				Laser OFF
+			</a>
+			<a class="btn btn-lg btn-success" onclick="laser.switchLED()" id="ledSwitch">
+				LED ON
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.moveRandom()">
+				RANDOM
+			</a>
+		
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, 1)">
+				-1 +1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(0, 1)">
+				+0 +1 
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, 1)">
+				+1 +1
+			</a>
+
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, 0)">
+				-1 +0 
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.center()">
+				CNTR
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, 0)">
+				+1 +0
+			</a>
+
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="laser.move(-1, -1)">
+				-1 -1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(0, -1)">
+				+0 -1
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="laser.move(1, -1)">
+				+1 -1
+			</a>
+
+		</div>
+
+
+		<div class="col-xs-12 col-md-6 text-center">
+
+			<h1>Platform</h1>
+
+			<a href="devicelog.php?id=PNTP" class="pull-right">
+				Platform log
+			</a>
+
+			<a class="btn btn-lg btn-success" onclick="platform.switchLED()" id="ledSwitch">
+				LED ON
+			</a>
+		
+			<br>
+
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(-2)">
+				2 LEFT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(-1)">
+				1 LEFT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(1)">
+				1 RIGHT
+			</a>
+			<a class="btn btn-lg btn-primary" onclick="platform.rotate(2)">
+				2 RIGHT
+			</a>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-md-6">
+			<pre id="laserlog"></pre>
+		</div>
+		<div class="col-xs-12 col-md-6">
+			<pre id="platformlog"></pre>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+<script type="text/javascript" src="js/pointnturn.js"></script>
+<script type="text/javascript">
+	var laser = new PNTLaser('ws://achex.ca:4010', 'PNTC', 'PNTL', 'laserlog');
+	var platform = new PNTPlatform('ws://achex.ca:4010', 'PNTC', 'PNTP', 'platformlog');
+</script>
+</body>
+</html>
+
