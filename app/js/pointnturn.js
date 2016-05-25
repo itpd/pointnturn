@@ -107,8 +107,8 @@ PNTLaser.prototype.move = function(x, y) {
 }
 // centers the 
 PNTLaser.prototype.center = function() {
-	this.x = Math.floor((this.limitXTop - this.limitXBot) / 2);
-	this.y = Math.floor((this.limitYTop - this.limitYBot) / 2);
+	this.x = Math.floor((this.limitXTop - this.limitXBot) / 2) + this.limitXBot;
+	this.y = Math.floor((this.limitYTop - this.limitYBot) / 2) + this.limitYBot;
 	this.sendMove();
 }
 // generates random X and Y degrees inside limit boundaries and sends it to ESP
