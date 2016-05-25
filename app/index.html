@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta >
-	<title>Point'N'Turn</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+	<title>Point'N'Turn App</title>
+	<meta property="og:title" content="Point'N'Turn - App">
+
+	<meta name="author" content="Ondrej Henek, Peter Heinzl, Salu Ylirisku">
+	<meta name="description" content="Point'N'Turn is a set of devices which lets you take back control of you presence in meetings. The idea was developed as a part of Master study program IT Product Design @SDU.dk">
+	<meta property="og:description" content="Point'N'Turn is a set of devices which lets you take back control of you presence in meetings. The idea was developed as a part of Master study program IT Product Design @SDU.dk">
+	<meta property="og:type" content="website">
+	<meta property="og:locale" content="en_US">
 
 	<style>
 		html, body {
@@ -91,9 +101,21 @@
 		}
 
 		#setupForm input {
+			background-color: #fff;
+    		box-sizing: border-box;
+    		border: 1px solid #ddd;
+			color: #000;
 			display: block;
-			padding: 5px 15px;
+			font-size: 18px;
+			padding: 10px 20px;
+			transition: all .3s;
 			width: 100%;
+			-webkit-appearance: none;
+		}
+		#setupForm input[type="submit"]:hover, #setupForm input[type="submit"]:focus {
+			background-color: #eee;
+			box-shadow: 0 0 3px #888;
+			cursor: pointer;
 		}
 
 	</style>
@@ -104,7 +126,7 @@
 	<div id="overlay">
 
 		<form id="setupForm">
-			<input type="text" name="remoteID" id="remoteID" placeholder="Device ID">
+			<input type="text" name="remoteID" id="remoteID" placeholder="Device ID" required>
 			<!-- <input type="text" name="thisID" id="thisID" placeholder="Password"> -->
 			<input type="submit" value="Submit">
 		</form>
