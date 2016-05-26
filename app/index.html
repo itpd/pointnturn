@@ -123,6 +123,16 @@
 			text-align: center;
 		}
 
+		.svg_title {
+			position: absolute;
+			text-align: center;
+			width: 100%;
+			z-index: -1;
+		}
+		.svg_inside_help {
+			top: 65%;
+		}
+
 		#help {
 			background-color: #000;
 			border-radius: 50%;
@@ -178,14 +188,17 @@
 
 	<div id="upper_layer">
 		<div id="laser_svg_container">
+			<h2 class="svg_title">Laser</h2>
 			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
 				<line id="laser_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
 				<circle id="laser_anchor_circle" cx="50%" cy="50%" r="5%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
 				<circle id="laser_target_circle" cx="50%" cy="50%" r="10%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
 			</svg>
+			<h3 class="svg_title svg_inside_help">Drag and hold the circle in desired direction...</h3>
 		</div>
 
 		<div id="panning_svg_container">
+			<h2 class="svg_title">Platform</h2>
 			<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
 				<line id="turner_dragline" x1="50%" y1="50%" x2="50%" y2="50%" style="stroke:rgba(150,150,150,1);stroke-width:5" />
 				<circle id="turner_anchor_circle" cx="50%" cy="50%" r="5%" stroke-width="0" fill="rgba(80, 80, 80, 0.2)" />
