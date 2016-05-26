@@ -11,16 +11,27 @@ static void handleCMD(JsonObject& cmd) {
 		}
 	}
 
+
+
 	if (cmd.containsKey("servox")) {
-		servoX.write((int) cmd["servox"]);
-		Serial.print("servox: ");
-		Serial.println((int) cmd["servox"]);
+    int upsideDown = 3000-int( cmd["servox"]);
+    servoX.writeMicroseconds(upsideDown);
+    timeLastPoint = millis();
+      if (digitalRead(laserpointerPin) == 0){
+        digitalWrite(laserpointerPin, HIGH);//PH
+        Serial.print("laserpointerON: ");
+        Serial.print(digitalRead(laserpointerPin));
+      }
 	}
 
 	if (cmd.containsKey("servoy")) {
-		servoY.write((int) cmd["servoy"]);
-		Serial.print("servoy: ");
-		Serial.println((int) cmd["servoy"]);
+    servoY.write(int( cmd["servoy"]));//PH
+    timeLastPoint = millis();
+      if (digitalRead(laserpointerPin) == 0){
+        digitalWrite(laserpointerPin, HIGH);//PH
+        Serial.print("laserpointerON: ");
+        Serial.print(digitalRead(laserpointerPin));
+      }   
 	}
 
 	if (cmd.containsKey("step")) {
