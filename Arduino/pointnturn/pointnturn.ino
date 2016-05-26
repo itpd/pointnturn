@@ -5,19 +5,24 @@
 #include <Servo.h>
 #include <AccelStepper.h> 
 
-//#define DEVICEID "PNTP"
-#define DEVICEID "PNTL"
+
+// ---------------------------------------------------
+//                  Your Settings
+// ---------------------------------------------------
+// Device ID settings
+#define DEVICEID "PNTL" // Device ID
+#define DEVICEPASSWORD "none" // Device password
 
 // WiFi settings
-const char* ssid     = "SDU-GUEST";
-const char* password = "";
-//const char* ssid     = "HomeBox-1D96";
-//const char* password = "c459d62f6";
+const char* ssid     = "SDU-GUEST"; // Wifi name (SSID)
+const char* password = ""; // Wifi password (blank for no password)
+// ---------------------------------------------------
+// ---------------------------------------------------
+
 
 // Pins
 const int outputLEDPin = 0;
 const int laserpointerPin = 2;//PH
-//const int pointerPowerPin = 16;//PH
 const int servoXPin = 12;
 const int servoYPin = 13;
 
@@ -38,12 +43,9 @@ int timeSincePoint = 0;
 void setup() {  
 	pinMode(outputLEDPin, OUTPUT);
   pinMode(laserpointerPin, OUTPUT);//PH
-  //pinMode(pointerPowerPin, OUTPUT);//PH  
+ 
 	servoX.attach(servoXPin);
 	servoY.attach(servoYPin);
-//  servoX.write(90);
-//  servoY.write(90);//PH
-  //digitalWrite(pointerPowerPin, HIGH);//PH
   servoX.writeMicroseconds(1500);//PH
   servoY.writeMicroseconds(1500);//PH
  
@@ -53,12 +55,10 @@ void setup() {
 	wifiConnect();
 
 	webSocket.begin("achex.ca", 4010); // port 80?
-	//webSocket.setAuthorization("user", "Password"); // HTTP Basic Authorization
 	webSocket.onEvent(handleWebSocketEvent);
 
 	stepper.setMaxSpeed(300);
-	stepper.setAcceleration(100);
-
+  stepper.setAcceleration(300);
   digitalWrite(laserpointerPin, HIGH);//PH
 }
 
