@@ -23,8 +23,8 @@ const char* password = ""; // Wifi password (blank for no password)
 // Pins
 const int outputLEDPin = 0;
 const int laserpointerPin = 2;//PH
-const int servoXPin = 12;
-const int servoYPin = 13;
+const int servoXPin = 5;
+const int servoYPin = 4;
 
 // Others
 WebSocketsClient webSocket;
