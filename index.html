@@ -7,8 +7,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-	<title>Point'N'Turn - Cure for the Skype paralysis</title>
-	<meta property="og:title" content="Point'N'Turn - Cure for the Skype paralysis">
+	<title>Point'N'Turn - Cure for the video call paralysis</title>
+	<meta property="og:title" content="Point'N'Turn - Cure for the video call paralysis">
 
 	<meta name="author" content="Ondrej Henek, Peter Heinzl, Salu Ylirisku">
 
@@ -62,7 +62,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 					<a href="http://www.sdu.dk/itpd">
-						<img src="sdu_logo.png" style="width: 100px" alt="University of Souther Denmark">
+						<img src="sdu_logo.png" style="width: 80px" alt="University of Souther Denmark">
 					</a>
 				</li>
 			</ul>
@@ -74,7 +74,7 @@
 <div class="container">
 	<div class="jumbotron text-center">
 		<h1>Point'N'Turn</h1>
-		<p>The cure for skype paralysis is here! Take back the control in online meetings with two simple devices.</p>
+		<p>The cure for video call paralysis is here! Take back the control in online meetings with two simple devices.</p>
 
 		<div class="row">
 			<div class="col-xs-6">
@@ -83,7 +83,7 @@
 					<img src="platform.gif" alt="PNT Platform">
 				</p>
 				<p>
-					<a class="btn btn-primary btn-lg" href="#" role="button">Instructable</a>
+					<a class="btn btn-primary btn-lg" href="#how-to-platform" role="button">DIY instructions</a>
 				</p>
 
 			</div>
@@ -94,7 +94,7 @@
 					<img src="laser.gif" alt="PNT Laser pointer">
 				</p>
 				<p>
-					<a class="btn btn-primary btn-lg" href="#" role="button">Instructable</a>
+					Instructions coming soon...
 				</p>
 			</div>
 		</div>
@@ -107,7 +107,83 @@
 
 
 <div class="container">
-	<h1>Instructions</h1>
+	<h1 id="how-to-platform">Platform instructions</h1>
+
+	<h2>Step 1: Getting the materials</h2>
+
+	<ul>
+		<li>1 pcs. <a href="https://www.adafruit.com/products/2821" rel="nofollow">Adafruit Feather HUZZAH with ESP8266 WiFi</a></li>
+		<li>1 pcs. <a href="https://www.adafruit.com/products/1578" rel="nofollow">Lithium Ion Polymer Battery - 3.7v 500mAh</a></li>
+		<li>1 pcs. <a href="http://arduinotech.dk/shop/4-faset-stepper-motor-28byj-48-med-control-uln2003/" rel="nofollow">28BYJ-48 Stepper Motor</a></li>
+		<li>3 pcs.16 mm. Marbles</li>
+		<li>1 pcs.<a href="http://www.ebay.com/itm/NEW-ORIGINAL-SAMSUNG-MICRO-USB-CHARGING-CABLE-FOR-OEM-GALAXY-S3-S4-S6-NOTE-4-/262426066726" rel="nofollow">Micro usb charging cable</a></li>
+		<li>1 pcs 230x230x6 mm acrylic plate</li>
+		<li>1 pcs 600x900x6 mm MDF plate [Doublecheck this]</li>
+		<li>2 pcs Bolts and nuts 4x37mm. [Link or image to this type]</li>
+		<li>6 pcs. 1x12mm. nail [Link or image to this type]</li>
+		<li>8 pcs. screws 2x8mm. (for boards)</li>
+		<li>1 pcs. switch 5.5x11mm.</li>
+	</ul>
+
+
+	<h2>Step 2: The software part</h2>
+	<div>
+
+		<ol>
+			<li>
+				Install <a href="https://www.arduino.cc/en/Main/Software" rel="nofollow">Arduino IDE</a>. [tested version 1.6.9]
+			</li>
+			<li>
+				Install the <a href="https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx" rel="nofollow">serial drivers</a> for USB communication.
+			</li>
+			<li>
+				Install the board settings to Arduino IDE
+				<ol>
+					<li>
+						<p>Enter following into Additional Board Manager URLs field in the Arduino Settings (image 1)</p>
+						<pre>http://arduino.esp8266.com/stable/package_esp8266com_index.json</pre>
+						
+					</li>
+					<li>
+						<p>Use Tools -&gt; Board "..." -&gt; Board manager to find ESP8266 boards (image 2) [tested version 2.2.0]</p>
+					</li>
+				</ol>
+			</li>
+			<li>Download <a href="http://www.airspayce.com/mikem/arduino/AccelStepper/" rel="nofollow">AccelStepper library</a> (image 3) [tested version 1.5.1]
+			</li>
+			<li>Download <a href="https://github.com/Links2004/arduinoWebSockets" rel="nofollow">Websockets library</a>
+			</li>
+			<li>Download <a href="https://github.com/bblanchon/ArduinoJson" rel="nofollow">ArduinoJson library</a>
+			</li>
+			<li>Put all the libraries into your library folder (OSX: Documents/Arduino/libraries)</li>
+			<li>Download our <a href="https://github.com/itpd/pointnturn" rel="nofollow">Point'N'Turn sketch</a> and place it in your sketch folder (OSX: Documents/Arduino)
+			</li>
+		</ol>
+		
+		<h3>Uploading to the microcontroller</h3>
+		<ol>
+			<li>Open the Point'N'Turn sketch "pointnturn.ino" in Arduini IDE.</li>
+			<li>Modify Wifi name and password to connect to your home Wifi (image 4)</li>
+			<li>Set the DeviceID and password to whatever you want. The other participant has to know this to connect via GUI - you'll find more info in next steps. (image 4)</li>
+			<li>Plug in the microcontroller via USB to your computer.</li>
+			<li>Set the board in Tools -&gt; Board "..." to Adafruit HUZZAH ESP8266</li>
+			<li>Set the Tools -&gt; Port to the correct destination (OSX: /dev/cu.SLAB_USBtoUART)</li>
+			<li>Upload the sketch!</li>
+		</ol>
+		<p>(Above steps are similar to what official Adafruit page says, but the page is outdated and too complicated for our purposes.)</p>
+
+	</div>
+
+	<h2>Step 3: Laser cutting the platform</h2>
+
+	<h2>Step 4: Assembly</h2>
+
+	<h2>Step 5: Using the Point'N'Turn</h2>
+	<div>
+		<p>In the first step you chose your unique device ID. Now it's time to use it! Go to our <a href="app/">Point'N'Turn app</a>, input the device ID and enjoy the moving magic!
+	</div>
+
+
 </div>
 
 </body>
