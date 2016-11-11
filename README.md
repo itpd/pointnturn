@@ -1,5 +1,7 @@
 # Point'N'Turn
 
+Find more about the project at http://itpd.github.io/pointnturn/
+
 ## Javascript Interface
 
 To initialize the Laser create a new PNTLaser object with 3 arguments:
